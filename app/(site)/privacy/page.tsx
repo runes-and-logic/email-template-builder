@@ -1,11 +1,9 @@
 import { cloudMode } from "@/lib/config";
-import { Nav, Footer } from "@/components/site";
 export const metadata = { title: "Demo privacy information — Postly" };
 export default function Privacy() {
-  if (cloudMode) return <><Nav /><main id="main-content" className="container prose-page"><h1>Your workspace data</h1><p>Your account email, profile, workspace membership, email documents, brand kits, reusable blocks, and revisions are stored using Supabase. Access to workspace records is restricted by membership and role.</p><h2>Images and external resources</h2><p>Images uploaded for email use are hosted at public URLs so recipients can view them. Avoid confidential uploads. External image URLs and Google Fonts contact their respective providers when loaded.</p><h2>Payments and email</h2><p>Razorpay handles subscription checkout and payment details. Postly stores subscription identifiers, status, and billing period information. Test emails are delivered through Resend to your verified account address when delivery is enabled.</p><h2>Browser recovery</h2><p>Unsaved recovery copies are kept in this browser. Browser imports happen only when you choose to import, and original local emails are retained.</p><h2>Data access and removal</h2><p>Emails can be moved to Trash and restored. Removing an uploaded image permanently breaks its public URL. Contact the service operator for account data requests.</p></main><Footer /></>;
+  if (cloudMode) return <><main id="main-content" className="container prose-page"><h1>Your workspace data</h1><p>Your account email, profile, workspace membership, email documents, brand kits, reusable blocks, and revisions are stored using Supabase. Access to workspace records is restricted by membership and role.</p><h2>Images and external resources</h2><p>Images uploaded for email use are hosted at public URLs so recipients can view them. Avoid confidential uploads. External image URLs and Google Fonts contact their respective providers when loaded.</p><h2>Payments and email</h2><p>Razorpay handles subscription checkout and payment details. Postly stores subscription identifiers, status, and billing period information. Test emails are delivered through Resend to your verified account address when delivery is enabled.</p><h2>Browser recovery</h2><p>Unsaved recovery copies are kept in this browser. Browser imports happen only when you choose to import, and original local emails are retained.</p><h2>Data access and removal</h2><p>Emails can be moved to Trash and restored. Removing an uploaded image permanently breaks its public URL. Contact the service operator for account data requests.</p></main></>;
   return (
     <>
-      <Nav />
       <main id="main-content" className="container prose-page">
         <span className="eyebrow">TRANSPARENCY, BY DESIGN.</span>
         <h1>Your data in this demo.</h1>
@@ -38,7 +36,6 @@ export default function Privacy() {
           content.
         </p>
       </main>
-      <Footer />
     </>
   );
 }

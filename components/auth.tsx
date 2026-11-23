@@ -6,7 +6,7 @@ import { cloudMode } from "@/lib/config";
 import { CloudAuth } from "./cloud-auth";
 import { Logo } from "./site";
 export function Auth(props: { signin?: boolean; plan?: string }) {
-  return cloudMode ? <CloudAuth signin={!!props.signin} /> : <DemoAuth {...props} />;
+  return cloudMode ? <CloudAuth signin={!!props.signin} plan={props.plan} /> : <DemoAuth {...props} />;
 }
 function DemoAuth({
   signin = false,

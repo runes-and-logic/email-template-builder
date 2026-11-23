@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { Nav, Footer } from "@/components/site";
+import { Footer } from "@/components/site";
+import { SiteHeader } from "@/components/site-header";
 export default function NotFound() {
   return (
     <>
-      <Nav />
+      <SiteHeader />
       <main id="main-content" className="container empty-state">
         <span className="eyebrow">A SMALL DETOUR.</span>
         <h1>This page wandered off.</h1>

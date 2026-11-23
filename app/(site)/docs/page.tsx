@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { Nav, Footer } from "@/components/site";
 export const metadata = { title: "Getting started — Postly" };
 export default function Docs() {
   return (
     <>
-      <Nav />
       <main id="main-content" className="container prose-page">
         <span className="eyebrow">A LITTLE GUIDANCE GOES A LONG WAY.</span>
         <h1>Let’s make your first email.</h1>
@@ -85,7 +83,6 @@ export default function Docs() {
           </Link>
         </p>
       </main>
-      <Footer />
     </>
   );
 }

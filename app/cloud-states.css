@@ -1,0 +1,134 @@
+/* Cloud gallery + pricing: loading and fallback states */
+.cloud-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 38px;
+  border: 1px solid #e4dce9;
+  border-radius: 9px;
+  background: #fff;
+  color: #9a8fa3;
+}
+.cloud-search input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  min-width: 0;
+  width: 200px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.cloud-search:focus-within {
+  outline: 2px solid #bca6df;
+  outline-offset: 2px;
+}
+.skeleton-card {
+  border-radius: 9px;
+  overflow: hidden;
+}
+.skeleton-card > div,
+.skeleton-card > span,
+.skeleton-plan > span {
+  display: block;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #ece8ef 0%, #f6f3f8 50%, #ece8ef 100%);
+  background-size: 200% 100%;
+  animation: home-shimmer 1.4s ease-in-out infinite;
+}
+.skeleton-card > div {
+  height: 292px;
+}
+.skeleton-card > span {
+  height: 12px;
+  margin-top: 14px;
+  width: 70%;
+}
+.skeleton-card > span + span {
+  width: 40%;
+  margin-top: 8px;
+}
+.skeleton-plan {
+  padding: 25px 22px;
+  border: 1px solid #e8e2ed;
+  border-radius: 9px;
+  background: #fff;
+  display: grid;
+  gap: 12px;
+}
+.skeleton-plan > span {
+  height: 12px;
+}
+.skeleton-plan > span:nth-child(2) {
+  height: 32px;
+  width: 60%;
+}
+.skeleton-plan > span:last-child {
+  height: 36px;
+  margin-top: 10px;
+}
+@keyframes home-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-card > div,
+  .skeleton-card > span,
+  .skeleton-plan > span {
+    animation: none;
+  }
+}
+.service-fallback {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px;
+  border: 1px dashed #d9cde8;
+  border-radius: 14px;
+  background: #fff;
+  flex-wrap: wrap;
+}
+.service-fallback > svg {
+  flex: none;
+  padding: 11px;
+  box-sizing: content-box;
+  border-radius: 12px;
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.service-fallback > div {
+  flex: 1;
+  min-width: 220px;
+}
+.service-fallback h3 {
+  font-size: 15px;
+  margin: 0 0 4px;
+}
+.service-fallback p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+}
+.service-fallback > .service-fallback-actions {
+  flex: none;
+  min-width: 0;
+}
+.service-fallback-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.service-fallback-actions .button {
+  font-size: 12px;
+}
+
+@media (max-width: 560px) {
+  .cloud-search {
+    flex: 1;
+  }
+  .cloud-search input {
+    width: 100%;
+  }
+}

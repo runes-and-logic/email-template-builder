@@ -1,12 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
 import {
   ArrowUpRight,
   ArrowRight,
-  Menu,
-  X,
   Send,
   Check,
   Minus,
@@ -22,68 +19,6 @@ export function Logo() {
       </span>
       postly<span className="logo-dot">.</span>
     </Link>
-  );
-}
-export function Nav() {
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
-  return (
-    <header className="nav-wrap">
-      <nav className="nav container" aria-label="Main navigation">
-        <Logo />
-        <div className={`nav-links ${open ? "is-open" : ""}`}>
-          <Link onClick={() => setOpen(false)} href="/editor">
-            Product
-          </Link>
-          <Link onClick={() => setOpen(false)} href="/#use-cases">
-            Use Cases
-          </Link>
-          <Link onClick={() => setOpen(false)} href="/#features">
-            Features
-          </Link>
-          <Link
-            className={pathname === "/templates" ? "active" : ""}
-            onClick={() => setOpen(false)}
-            href="/templates"
-          >
-            Templates
-          </Link>
-          <Link
-            className={pathname === "/pricing" ? "active" : ""}
-            onClick={() => setOpen(false)}
-            href="/pricing"
-          >
-            Pricing
-          </Link>
-          <Link onClick={() => setOpen(false)} href="/dashboard">
-            My Templates <span className="tiny-arrow">↗</span>
-          </Link>
-          <Link
-            className="mobile-signin"
-            onClick={() => setOpen(false)}
-            href="/login"
-          >
-            Sign in
-          </Link>
-        </div>
-        <div className="nav-actions">
-          <Link className="signin" href={cloudMode ? "/account" : "/login"}>
-            {cloudMode ? "Account" : "Sign in"}
-          </Link>
-          <Link className="button small" href="/signup">
-            Get Started <ArrowUpRight size={15} />
-          </Link>
-        </div>
-        <button
-          className="menu-toggle icon-button"
-          aria-label="Toggle navigation"
-          aria-expanded={open}
-          onClick={() => setOpen(!open)}
-        >
-          {open ? <X /> : <Menu />}
-        </button>
-      </nav>
-    </header>
   );
 }
 export function Footer() {

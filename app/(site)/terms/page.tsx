@@ -1,11 +1,9 @@
 import { cloudMode } from "@/lib/config";
-import { Nav, Footer } from "@/components/site";
 export const metadata = { title: "Demo terms — Postly" };
 export default function Terms() {
-  if (cloudMode) return <><Nav /><main id="main-content" className="container prose-page"><h1>Using Postly</h1><h2>Your content</h2><p>Use content and images you have permission to use. Review your email, destinations, sender information, and unsubscribe requirements in your delivery platform before sending a campaign.</p><h2>Subscriptions</h2><p>Plan limits and billing periods appear in your account. Review the amount and plan in Razorpay checkout before authorizing payment. Workspace owners manage subscriptions and can request cancellation at the end of the current billing period.</p><h2>Exports and assets</h2><p>Email clients render HTML differently. Preview and test exported emails in your intended clients. Public image URLs must remain available for previously exported emails to display their images.</p><h2>Your workspace</h2><p>Workspace owners control membership and permissions. Keep account credentials private and keep independent copies of important exports.</p></main><Footer /></>;
+  if (cloudMode) return <><main id="main-content" className="container prose-page"><h1>Using Postly</h1><h2>Your content</h2><p>Use content and images you have permission to use. Review your email, destinations, sender information, and unsubscribe requirements in your delivery platform before sending a campaign.</p><h2>Subscriptions</h2><p>Plan limits and billing periods appear in your account. Review the amount and plan in Razorpay checkout before authorizing payment. Workspace owners manage subscriptions and can request cancellation at the end of the current billing period.</p><h2>Exports and assets</h2><p>Email clients render HTML differently. Preview and test exported emails in your intended clients. Public image URLs must remain available for previously exported emails to display their images.</p><h2>Your workspace</h2><p>Workspace owners control membership and permissions. Keep account credentials private and keep independent copies of important exports.</p></main></>;
   return (
     <>
-      <Nav />
       <main id="main-content" className="container prose-page">
         <span className="eyebrow">A CLEAR START.</span>
         <h1>About this demonstration.</h1>
@@ -33,7 +31,6 @@ export default function Terms() {
           provided without a service availability commitment.
         </p>
       </main>
-      <Footer />
     </>
   );
 }

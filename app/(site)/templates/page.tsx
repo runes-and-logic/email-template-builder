@@ -1,4 +1,4 @@
-import { Nav, Footer, FinalCTA } from "@/components/site";
+import { FinalCTA } from "@/components/site";
 import { Gallery } from "@/components/gallery";
 export const metadata = {
   title: "Email templates — Postly",
@@ -13,7 +13,6 @@ export default async function TemplatesPage({
   const { category } = await searchParams;
   return (
     <>
-      <Nav />
       <main id="main-content" className="container library-page">
         <div className="page-header">
           <span className="eyebrow">YOUR NEXT GREAT EMAIL IS IN HERE.</span>
@@ -30,7 +29,6 @@ export default async function TemplatesPage({
         <Gallery initialCategory={category || "All templates"} />
       </main>
       <FinalCTA />
-      <Footer />
     </>
   );
 }

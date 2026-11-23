@@ -12,8 +12,23 @@ import {
   Eye,
   Minus,
   Plus,
+  Store,
+  ShoppingBag,
+  Megaphone,
+  Briefcase,
+  PenTool,
+  Rocket,
+  Send,
+  Blocks,
+  MonitorSmartphone,
+  Download,
+  Heart,
+  Newspaper,
+  CalendarHeart,
+  Gift,
 } from "lucide-react";
-import { Nav, Footer, FinalCTA, Pricing } from "@/components/site";
+import "./home.css";
+import { FinalCTA, Pricing } from "@/components/site";
 import { Editor } from "@/components/editor";
 import { Gallery } from "@/components/gallery";
 const faqs = [
@@ -42,10 +57,120 @@ const faqs = [
     "No account is required. My Templates and Brand Kit use browser storage on this device. Cloud accounts and sync are not implemented. Clearing browser data removes saved work, so export HTML for a lasting copy.",
   ],
 ];
+const quickStarts = [
+  { id: "welcome", label: "Welcome", icon: Heart },
+  { id: "newsletter", label: "Newsletter", icon: Newspaper },
+  { id: "sale", label: "Promotion", icon: Gift },
+  { id: "event", label: "Event invite", icon: CalendarHeart },
+];
+const highlights = [
+  {
+    icon: Blocks,
+    value: "6",
+    label: "Building blocks",
+    text: "Text, images, buttons, dividers, spacers and columns.",
+  },
+  {
+    icon: MonitorSmartphone,
+    value: "2",
+    label: "Live previews",
+    text: "Check desktop and mobile while you design.",
+  },
+  {
+    icon: Palette,
+    value: "1",
+    label: "Brand Kit, everywhere",
+    text: "Save your logo, colors and fonts once. Apply them anywhere.",
+  },
+  {
+    icon: Download,
+    value: "0",
+    label: "Lines of code",
+    text: "Export responsive, table-based HTML in one click.",
+  },
+];
+const steps = [
+  {
+    n: "01",
+    title: "Find your starting point.",
+    text: "Pick a template that speaks to you. A warm welcome, a product launch, a little of everything.",
+    icon: Layers,
+    cta: "Browse templates",
+    href: "/templates",
+    visual: "pick",
+  },
+  {
+    n: "02",
+    title: "Make it feel like you.",
+    text: "Add your words. Find your colors. Turn a beautiful starting point into something unmistakably yours.",
+    icon: Palette,
+    cta: "Set up your Brand Kit",
+    href: "/brand",
+    visual: "style",
+  },
+  {
+    n: "03",
+    title: "Take it to the world.",
+    text: "Preview every detail, export your HTML, and send it with your preferred email provider.",
+    icon: Send,
+    cta: "Open the editor",
+    href: "/editor",
+    visual: "send",
+  },
+];
+const useCases = [
+  {
+    name: "Small businesses",
+    description: "Welcome new customers and share what makes your business special.",
+    id: "welcome",
+    template: "A warm welcome",
+    icon: Store,
+    tone: "green",
+  },
+  {
+    name: "Ecommerce stores",
+    description: "Keep orders personal, recover carts, and introduce your next collection.",
+    id: "order",
+    template: "Good things are on the way",
+    icon: ShoppingBag,
+    tone: "peach",
+  },
+  {
+    name: "Marketing teams",
+    description: "Build newsletters and promotions with consistent brand settings.",
+    id: "newsletter",
+    template: "The Sunday edit",
+    icon: Megaphone,
+    tone: "violet",
+  },
+  {
+    name: "Agencies",
+    description: "Duplicate templates and reuse content blocks for each new project.",
+    id: "launch",
+    template: "Something worth sharing",
+    icon: Briefcase,
+    tone: "blue",
+  },
+  {
+    name: "Freelancers",
+    description: "Create polished client emails and hand off ready-to-import HTML.",
+    id: "event",
+    template: "You’re on the guest list",
+    icon: PenTool,
+    tone: "rose",
+  },
+  {
+    name: "SaaS companies",
+    description: "Announce product improvements and guide customers through their first steps.",
+    id: "update",
+    template: "A fresh perspective",
+    icon: Rocket,
+    tone: "sand",
+  },
+];
 export default function Home() {
   return (
     <>
-      <Nav />
       <main id="main-content">
         <section className="hero">
           <div className="hero-glow" />
@@ -92,6 +217,14 @@ export default function Home() {
                 <Check size={13} /> Make it your own
               </span>
             </div>
+            <nav className="home-quickstart" aria-label="Quick start templates">
+              <span>Jump right in:</span>
+              {quickStarts.map(({ id, label, icon: Icon }) => (
+                <Link key={id} href={`/editor?template=${id}`}>
+                  <Icon size={14} /> {label}
+                </Link>
+              ))}
+            </nav>
             <div className="hero-product">
               <div className="product-floating-label">
                 <span className="scribble-arrow">↘</span> Your ideas,
@@ -133,6 +266,20 @@ export default function Home() {
             Export HTML for your own email provider. Compatibility depends on
             its import support.
           </small>
+        </section>
+        <section className="home-highlights container" aria-label="Postly at a glance">
+          {highlights.map(({ icon: Icon, value, label, text }) => (
+            <article key={label}>
+              <span className="home-highlight-icon">
+                <Icon size={20} />
+              </span>
+              <div>
+                <strong>{value}</strong>
+                <h3>{label}</h3>
+                <p>{text}</p>
+              </div>
+            </article>
+          ))}
         </section>
         <section id="features" className="features-section container">
           <div className="section-heading">
@@ -311,38 +458,25 @@ export default function Home() {
             <h2>From an idea to “it’s ready.”</h2>
             <p>Three simple steps. One very good email.</p>
           </div>
-          <div className="steps-grid">
-            {[
-              {
-                n: "01",
-                title: "Find your starting point.",
-                text: "Pick a template that speaks to you. A warm welcome, a product launch, a little of everything.",
-                icon: Layers,
-              },
-              {
-                n: "02",
-                title: "Make it feel like you.",
-                text: "Add your words. Find your colors. Turn a beautiful starting point into something unmistakably yours.",
-                icon: Palette,
-              },
-              {
-                n: "03",
-                title: "Take it to the world.",
-                text: "Preview every detail, export your HTML, and send it with your preferred email provider.",
-                icon: SendIcon,
-              },
-            ].map(({ n, title, text, icon: Icon }) => (
-              <article key={n}>
-                <div className="step-top">
-                  <span>{n}</span>
-                  <Icon size={24} />
-                  <div />
+          <ol className="home-steps">
+            {steps.map(({ n, title, text, icon: Icon, cta, href, visual }) => (
+              <li key={n}>
+                <div className={`home-step-visual ${visual}`} aria-hidden="true">
+                  <StepVisual kind={visual} />
                 </div>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </article>
+                <div className="home-step-body">
+                  <span className="home-step-number">
+                    <Icon size={15} /> Step {n}
+                  </span>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                  <Link className="text-link" href={href}>
+                    {cta} <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </section>
         <section id="use-cases" className="container use-cases">
           <div className="section-heading">
@@ -357,47 +491,21 @@ export default function Home() {
               fits the moment.
             </p>
           </div>
-          <div className="use-case-grid">
-            {[
-              [
-                "Small businesses",
-                "Welcome new customers and share what makes your business special.",
-                "welcome",
-              ],
-              [
-                "Ecommerce stores",
-                "Keep orders personal, recover carts, and introduce your next collection.",
-                "order",
-              ],
-              [
-                "Marketing teams",
-                "Build newsletters and promotions with consistent brand settings.",
-                "newsletter",
-              ],
-              [
-                "Agencies",
-                "Duplicate templates and reuse content blocks for each new project.",
-                "launch",
-              ],
-              [
-                "Freelancers",
-                "Create polished client emails and hand off ready-to-import HTML.",
-                "event",
-              ],
-              [
-                "SaaS companies",
-                "Announce product improvements and guide customers through their first steps.",
-                "update",
-              ],
-            ].map(([name, description, id]) => (
+          <div className="home-use-cases">
+            {useCases.map(({ name, description, id, template, icon: Icon, tone }) => (
               <Link
                 key={name}
-                className="use-case"
+                className={`home-use-case tone-${tone}`}
                 href={`/editor?template=${id}`}
               >
-                <ArrowUpRight size={19} />
+                <span className="home-use-case-icon">
+                  <Icon size={20} />
+                </span>
                 <h3>{name}</h3>
                 <p>{description}</p>
+                <span className="home-use-case-cta">
+                  Start with “{template}” <ArrowUpRight size={15} />
+                </span>
               </Link>
             ))}
           </div>
@@ -428,7 +536,6 @@ export default function Home() {
         </section>
         <FinalCTA />
       </main>
-      <Footer />
     </>
   );
 }
@@ -438,6 +545,44 @@ function LayoutIcon() {
 function TypeIcon() {
   return <span style={{ fontFamily: "serif", fontSize: 22 }}>T</span>;
 }
-function SendIcon({ size }: { size: number }) {
-  return <ArrowUpRight size={size} />;
+function StepVisual({ kind }: { kind: string }) {
+  if (kind === "pick")
+    return (
+      <div className="sv-cards">
+        <span />
+        <span className="chosen">
+          <Check size={14} />
+        </span>
+        <span />
+      </div>
+    );
+  if (kind === "style")
+    return (
+      <div className="sv-style">
+        <div className="sv-swatches">
+          <i style={{ background: "#6941c6" }} />
+          <i style={{ background: "#3d5748" }} />
+          <i style={{ background: "#e08a5b" }} />
+          <i style={{ background: "#252131" }} />
+        </div>
+        <div className="sv-type">
+          <b>Aa</b>
+          <span />
+          <span className="short" />
+        </div>
+      </div>
+    );
+  return (
+    <div className="sv-send">
+      <span className="sv-envelope">
+        <Send size={20} />
+      </span>
+      <span className="sv-badge">
+        <Code2 size={13} /> index.html
+      </span>
+      <span className="sv-badge ok">
+        <Check size={13} /> Ready to send
+      </span>
+    </div>
+  );
 }
