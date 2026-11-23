@@ -23,7 +23,7 @@ const faqs = [
   ],
   [
     "Can I export my templates as HTML?",
-    "Yes. Export a clean, responsive HTML email with your edited text, brand color, and button link. The current export uses a simple table-based layout; decorative preview artwork is not included.",
+    "Yes. Export a clean, responsive HTML email with your edited text, brand color, and button link. Export preserves your content blocks, images, links, and styles in a table-based layout. Decorative gallery artwork is inspiration; the editor preview shows your export.",
   ],
   [
     "Will my emails look good on mobile?",
@@ -31,15 +31,15 @@ const faqs = [
   ],
   [
     "Can I make a template match my brand?",
-    "Absolutely. Change the brand name, headline, message, button text, and accent color in the editor, then save your draft locally or export it.",
+    "Absolutely. Change the business identity in Brand Kit, apply it across templates, and fine-tune every block in the editor. Save locally or export HTML.",
   ],
   [
     "Can I send emails directly from Postly?",
     "Email sending and campaign management are not connected in this demo. Export your HTML and import it into your own email service provider to send.",
   ],
   [
-    "Can I cancel my subscription?",
-    "There are no active subscriptions or charges in this demo. The pricing shown is sample configuration, and paid account management is not available yet.",
+    "Do I need an account to save templates?",
+    "No account is required. My Templates and Brand Kit use browser storage on this device. Cloud accounts and sync are not implemented. Clearing browser data removes saved work, so export HTML for a lasting copy.",
   ],
 ];
 export default function Home() {
@@ -70,12 +70,12 @@ export default function Home() {
             </h1>
             <p className="hero-description">
               From your first hello to your next big launch. Create beautiful,
-              <br className="desktop-break" /> responsive emails—without
-              wrestling with HTML.
+              <br className="desktop-break" /> responsive emails without coding
+              or wrestling with HTML.
             </p>
             <div className="hero-actions">
               <Link className="button" href="/editor">
-                Start building for free <ArrowUpRight size={17} />
+                Start Creating <ArrowUpRight size={17} />
               </Link>
               <Link className="button secondary" href="/templates">
                 <LayoutIcon /> Explore templates
@@ -106,7 +106,7 @@ export default function Home() {
           </div>
         </section>
         <section className="compatibility container">
-          <p>YOUR EMAILS. RIGHT AT HOME IN YOUR FAVORITE TOOLS.</p>
+          <p>CREATE IN POSTLY. EXPORT TO YOUR OWN EMAIL PROVIDER.</p>
           <div className="compatibility-list">
             <span>
               <span className="provider-icon mailchimp">◉</span>mailchimp
@@ -341,6 +341,64 @@ export default function Home() {
                 <h3>{title}</h3>
                 <p>{text}</p>
               </article>
+            ))}
+          </div>
+        </section>
+        <section id="use-cases" className="container use-cases">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">
+                GOOD COMMUNICATION, FOR EVERY BUSINESS
+              </span>
+              <h2>Make every message count.</h2>
+            </div>
+            <p>
+              From a first hello to your next launch, start with a template that
+              fits the moment.
+            </p>
+          </div>
+          <div className="use-case-grid">
+            {[
+              [
+                "Small businesses",
+                "Welcome new customers and share what makes your business special.",
+                "welcome",
+              ],
+              [
+                "Ecommerce stores",
+                "Keep orders personal, recover carts, and introduce your next collection.",
+                "order",
+              ],
+              [
+                "Marketing teams",
+                "Build newsletters and promotions with consistent brand settings.",
+                "newsletter",
+              ],
+              [
+                "Agencies",
+                "Duplicate templates and reuse content blocks for each new project.",
+                "launch",
+              ],
+              [
+                "Freelancers",
+                "Create polished client emails and hand off ready-to-import HTML.",
+                "event",
+              ],
+              [
+                "SaaS companies",
+                "Announce product improvements and guide customers through their first steps.",
+                "update",
+              ],
+            ].map(([name, description, id]) => (
+              <Link
+                key={name}
+                className="use-case"
+                href={`/editor?template=${id}`}
+              >
+                <ArrowUpRight size={19} />
+                <h3>{name}</h3>
+                <p>{description}</p>
+              </Link>
             ))}
           </div>
         </section>

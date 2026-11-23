@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Logo } from "@/components/site";
-import { Editor } from "@/components/editor";
+import { cloudMode } from "@/lib/config";
+import { Workspace } from "@/components/workspace";
 export const metadata = { title: "Your email workspace — Postly" };
 export default async function EditorPage({
   searchParams,
 }: {
-  searchParams: Promise<{ template?: string }>;
+  searchParams: Promise<{ template?: string; draft?: string }>;
 }) {
-  const { template } = await searchParams;
+  const { template, draft } = await searchParams;
   return (
     <main id="main-content" className="editor-page">
       <div className="editor-page-nav">
@@ -23,10 +24,13 @@ export default async function EditorPage({
           </Link>
         </div>
       </div>
-      <Editor key={template || "welcome"} initialId={template} />
+      <Workspace
+        key={draft || template || "welcome"}
+        initialId={template}
+        draftId={draft}
+      />
       <p className="pricing-footnote">
-        Demo workspace · Drafts are saved only in this browser. HTML export
-        includes your content and brand color in a simple responsive layout.
+        {cloudMode ? "Cloud workspace · Changes save to your account." : "Local workspace · Drafts save in this browser."} Export includes your blocks, images, links, and styles.
       </p>
     </main>
   );

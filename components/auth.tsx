@@ -2,8 +2,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Layers, PenLine, Check } from "lucide-react";
+import { cloudMode } from "@/lib/config";
+import { CloudAuth } from "./cloud-auth";
 import { Logo } from "./site";
-export function Auth({
+export function Auth(props: { signin?: boolean; plan?: string }) {
+  return cloudMode ? <CloudAuth signin={!!props.signin} /> : <DemoAuth {...props} />;
+}
+function DemoAuth({
   signin = false,
   plan,
 }: {
@@ -46,6 +51,10 @@ export function Auth({
               like to begin?
             </p>
             <div className="onboarding-list">
+              <Link href="/dashboard">
+                <Layers size={20} />
+                My Templates <ArrowRight size={16} />
+              </Link>
               <Link href="/templates">
                 <Layers size={20} />
                 Find a template <ArrowRight size={16} />

@@ -5,8 +5,10 @@ import {
   Package,
   ArrowRight,
 } from "lucide-react";
+import { documentHtml } from "@/lib/email";
+import { fromTemplate } from "@/lib/workspace";
 import type { Template } from "@/lib/data";
-export function EmailPreview({
+export function IllustratedPreview({
   template,
   mini = false,
 }: {
@@ -111,4 +113,8 @@ export function EmailPreview({
       </div>
     </div>
   );
+}
+
+export function EmailPreview({ template, mini = false }: { template: Template; mini?: boolean }) {
+  return <iframe className={`canonical-preview ${mini ? "canonical-mini" : ""}`} title={`Email preview: ${template.name}`} sandbox="" loading="lazy" srcDoc={documentHtml(fromTemplate(template))} tabIndex={-1} />;
 }

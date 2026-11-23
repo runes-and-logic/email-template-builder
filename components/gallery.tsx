@@ -10,9 +10,14 @@ import {
   Check,
   Eye,
 } from "lucide-react";
-import { templates, type Template } from "@/lib/data";
+import { templates, templateCategories, type Template } from "@/lib/data";
+import { cloudMode } from "@/lib/config";
+import { CloudGallery } from "./cloud-gallery";
 import { EmailPreview } from "./email-preview";
-export function Gallery({
+export function Gallery(props: { preview?: boolean; initialCategory?: string }) {
+  return cloudMode ? <CloudGallery {...props} /> : <LocalGallery {...props} />;
+}
+function LocalGallery({
   preview = false,
   initialCategory = "All templates",
 }: {
@@ -26,16 +31,14 @@ export function Gallery({
   const dialog = useRef<HTMLDialogElement>(null);
   const categories = [
     "All templates",
-    "Welcome",
-    "Newsletters",
-    "Promotions",
-    "Product updates",
-    ...(!preview ? ["Transactional", "Events"] : []),
+    ...(preview ? templateCategories.slice(0, 3) : templateCategories),
   ];
   let filtered = templates.filter(
     (t) =>
       (category === "All templates" || t.category === category) &&
-      `${t.name} ${t.category}`.toLowerCase().includes(search.toLowerCase()),
+      `${t.name} ${t.category} ${t.subtitle}`
+        .toLowerCase()
+        .includes(search.toLowerCase()),
   );
   if (sort === "az")
     filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
@@ -55,6 +58,7 @@ export function Gallery({
           {categories.map((c) => (
             <button
               className={category === c ? "active" : ""}
+              aria-pressed={category === c}
               key={c}
               onClick={() => setCategory(c)}
             >
@@ -109,12 +113,14 @@ export function Gallery({
                   <button onClick={() => setSelected(t)}>{t.name}</button>
                 </h3>
                 <p>{t.category}</p>
+                <p className="template-description">{t.subtitle}</p>
               </div>
               <Link
                 href={`/editor?template=${t.id}`}
                 className="template-use"
                 aria-label={`Use ${t.name}`}
               >
+                <span>Customize</span>
                 <ArrowUpRight size={17} />
               </Link>
             </div>

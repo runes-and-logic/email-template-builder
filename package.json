@@ -9,14 +9,16 @@
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test lib/email.test.ts",
-    "test:e2e": "node scripts/check-browser.mjs"
+    "test": "node --experimental-strip-types --test lib/*.test.ts",
+    "test:e2e": "node scripts/check-browser.mjs",
+    "test:proxy": "node scripts/check-proxy.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
     "next": "^15.3.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@postly/email-core": "file:vendor/postly-email-core-1.0.0.tgz"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
@@ -30,5 +32,8 @@
   },
   "overrides": {
     "postcss": "$postcss"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }

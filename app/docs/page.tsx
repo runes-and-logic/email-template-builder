@@ -23,27 +23,29 @@ export default function Docs() {
         <section>
           <h2>2. Make it yours</h2>
           <p>
-            In the Content tab, edit your brand name, headline, message, button
-            text, and destination link. Use the Design tab to choose an accent
-            color. Desktop and mobile controls let you inspect both layouts.
-            Undo and redo help you explore different ideas.
+            Add content or layout blocks from the left library. Select a block
+            on the canvas to edit text, images, links, typography, colors, and
+            spacing on the right. Drag the grip to reorder blocks, or use the up
+            and down buttons with your keyboard. Desktop and mobile controls let
+            you inspect both layouts. Undo and redo help you explore different
+            ideas.
           </p>
           <p>
             Use “Save draft” to save the current template’s content in this
             browser. Returning to the same template restores your most recent
-            save. This is not cloud storage: clearing browser data removes your
-            drafts.
+            save. Visit My Templates to manage all saved work. This is not cloud
+            storage: clearing browser data removes your drafts.
           </p>
         </section>
         <section id="export">
           <h2>3. Export your HTML</h2>
           <p>
             Select “Export HTML” to download a responsive HTML file. The export
-            includes your text, brand color, and button link in a simple
-            table-based layout. Decorative artwork and the more detailed gallery
-            layouts are preview inspiration and are not part of the current
-            export. The code control shows the exact HTML that will be
-            downloaded.
+            includes your blocks, images, links, columns, and styles in a
+            responsive table-based layout. Gallery artwork offers visual
+            inspiration; the editable canvas and Preview email show your actual
+            content. View HTML displays the exact export. Public HTTPS image
+            URLs offer broader email compatibility than embedded uploads.
           </p>
           <p>
             Import the file into an email provider that supports custom HTML.
@@ -55,12 +57,13 @@ export default function Docs() {
         <section>
           <h2>What this demo includes</h2>
           <p>
-            Template browsing, previews, content editing, color customization,
-            local draft saves, undo and redo, and HTML downloads are working
-            demo features. The landing page’s block palette illustrates an
-            editor concept; drag-and-drop, reusable blocks, personalization
-            processing, cloud accounts, billing, delivery, and team workspaces
-            are not connected.
+            Template browsing, block editing, drag reordering, reusable saved
+            blocks, undo and redo, HTML downloads, My Templates, and Brand Kit
+            work locally. In My Templates you can create, duplicate, rename,
+            delete, and filter your saved work. Configure your branding in Brand
+            Kit, save it, then choose Apply Brand Kit in any editor. Cloud
+            accounts, billing, email delivery, and team workspaces are not
+            connected.
           </p>
         </section>
         <section id="support">

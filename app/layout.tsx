@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { SessionGuard } from "@/components/session-guard";
 import "./globals.css";
 import "./refinements.css";
+import "./workspace.css";
+import "./saas.css";
 export const metadata: Metadata = {
   title: "Postly — Beautiful emails. Built in minutes.",
   description:
@@ -15,7 +18,7 @@ export default function RootLayout({
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
-        {children}
+        <SessionGuard>{children}</SessionGuard>
       </body>
     </html>
   );

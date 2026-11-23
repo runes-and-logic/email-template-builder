@@ -11,6 +11,8 @@ import {
   Check,
   Minus,
 } from "lucide-react";
+import { CloudPricing } from "./cloud-pricing";
+import { cloudMode } from "@/lib/config";
 import { plans, annualDiscount } from "@/lib/data";
 export function Logo() {
   return (
@@ -30,6 +32,12 @@ export function Nav() {
       <nav className="nav container" aria-label="Main navigation">
         <Logo />
         <div className={`nav-links ${open ? "is-open" : ""}`}>
+          <Link onClick={() => setOpen(false)} href="/editor">
+            Product
+          </Link>
+          <Link onClick={() => setOpen(false)} href="/#use-cases">
+            Use Cases
+          </Link>
           <Link onClick={() => setOpen(false)} href="/#features">
             Features
           </Link>
@@ -47,8 +55,8 @@ export function Nav() {
           >
             Pricing
           </Link>
-          <Link onClick={() => setOpen(false)} href="/docs">
-            Resources <span className="tiny-arrow">↗</span>
+          <Link onClick={() => setOpen(false)} href="/dashboard">
+            My Templates <span className="tiny-arrow">↗</span>
           </Link>
           <Link
             className="mobile-signin"
@@ -59,11 +67,11 @@ export function Nav() {
           </Link>
         </div>
         <div className="nav-actions">
-          <Link className="signin" href="/login">
-            Sign in
+          <Link className="signin" href={cloudMode ? "/account" : "/login"}>
+            {cloudMode ? "Account" : "Sign in"}
           </Link>
           <Link className="button small" href="/signup">
-            Start for free <ArrowUpRight size={15} />
+            Get Started <ArrowUpRight size={15} />
           </Link>
         </div>
         <button
@@ -99,6 +107,8 @@ export function Footer() {
           <Link href="/templates">Templates</Link>
           <Link href="/pricing">Pricing</Link>
           <Link href="/editor">Email editor</Link>
+          <Link href="/dashboard">My Templates</Link>
+          <Link href="/brand">Brand Kit</Link>
         </div>
         <div>
           <h4>Templates</h4>
@@ -146,7 +156,10 @@ export function FinalCTA() {
     </section>
   );
 }
-export function Pricing({ compact = false }: { compact?: boolean }) {
+export function Pricing(props: { compact?: boolean }) {
+  return cloudMode ? <CloudPricing /> : <LocalPricing {...props} />;
+}
+function LocalPricing({ compact = false }: { compact?: boolean }) {
   const [annual, setAnnual] = useState(false);
   return (
     <section
@@ -182,9 +195,7 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
             key={plan.name}
           >
             {plan.name === "Pro" && (
-              <span className="popular">
-                A little more possibility · Most popular
-              </span>
+              <span className="popular">Proposed Pro plan</span>
             )}
             <h3>{plan.name}</h3>
             <p className="plan-description">
@@ -233,8 +244,9 @@ export function Pricing({ compact = false }: { compact?: boolean }) {
         ))}
       </div>
       <p className="pricing-footnote">
-        Plans describe template creation limits. This demo includes local
-        editing and HTML export; email delivery requires your own provider.
+        All local features are currently free, with no enforced plan limits.
+        Paid tiers, team workspaces, and support services are proposed features.
+        Email delivery requires your own provider.
       </p>
     </section>
   );

@@ -1,0 +1,23 @@
+.canonical-preview { display: block; width: 100%; height: 720px; border: 0; background: #fff; }
+.canonical-mini { height: 480px; pointer-events: none; }
+.template-thumb .canonical-preview { width: 100%; }
+.email-metadata { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 24px; border-bottom: 1px solid #e6e1ec; }
+.email-metadata label, .account-plans label, .prose-page form label { display: grid; gap: 8px; font-size: 13px; }
+.email-metadata input, .prose-page input:not([type="checkbox"]), .prose-page select { width: 100%; min-width: 0; padding: 10px 12px; border: 1px solid #d8d0e0; border-radius: 6px; background: white; color: #30283c; }
+.email-checks, .version-history { padding: 12px 24px; border-bottom: 1px solid #e6e1ec; font-size: 13px; }
+.email-checks summary, .version-history summary { cursor: pointer; }
+.email-checks ul { padding: 12px 20px; line-height: 1.8; }
+.email-checks button { margin: 8px 12px 8px 0; }
+.account-plans { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(240px,100%),1fr)); gap: 16px; margin: 24px 0; }
+.account-plans > section, .account-plans > article { border: 1px solid #e6e1ec; border-radius: 12px; padding: 24px; background: #fff; }
+.prose-page form { display: grid; gap: 16px; margin: 24px 0; max-width: 680px; }
+.prose-page .studio-actions { flex-wrap: wrap; margin: 16px 0; }
+.platform-admin { max-width: 1280px; }
+.admin-table-scroll { overflow: auto; margin: 20px 0; }
+.admin-table-scroll table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.admin-table-scroll th, .admin-table-scroll td { text-align: left; padding: 12px; border-bottom: 1px solid #e6e1ec; max-width: 360px; overflow-wrap: anywhere; }
+.asset-library { padding: 12px 24px; }
+.asset-library-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(100px,1fr)); gap: 12px; }
+.asset-library-grid img { width: 100%; height: 80px; object-fit: contain; }
+.inline-notice { overflow-wrap: anywhere; flex-wrap: wrap; }
+@media(max-width:620px) { .email-metadata { grid-template-columns: 1fr; padding: 12px; } .email-checks,.version-history { padding: 12px; } }
