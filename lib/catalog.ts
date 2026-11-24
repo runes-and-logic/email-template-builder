@@ -2,8 +2,25 @@ import type { Document } from "@/lib/workspace";
 
 export type CatalogEntry = { id: string; name: string; category: string; content: Document };
 
-/** Public site origin used for canonical URLs, Open Graph and the sitemap. */
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3100").replace(/\/+$/, "");
+/**
+ * Public site origin used for canonical URLs, Open Graph and the sitemap.
+ * Accepts values with or without a protocol and never throws during the build: falls back to the
+ * Vercel-provided production/deployment host, then localhost.
+ */
+function resolveSiteUrl(): string {
+  const candidates = [process.env.NEXT_PUBLIC_SITE_URL, process.env.VERCEL_PROJECT_PRODUCTION_URL, process.env.VERCEL_URL];
+  for (const raw of candidates) {
+    const value = raw?.trim();
+    if (!value) continue;
+    try {
+      return new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`).origin;
+    } catch {
+      // Ignore a malformed value and try the next source.
+    }
+  }
+  return "http://localhost:3100";
+}
+export const siteUrl = resolveSiteUrl();
 
 /**
  * Server-side catalog fetch so templates are in the initial HTML (search engines, first paint).
