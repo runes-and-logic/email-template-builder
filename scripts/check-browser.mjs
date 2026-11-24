@@ -11,6 +11,11 @@ const browser = await chromium.launch({
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
+// The editor autosaves; Cmd/Ctrl+S saves immediately. Wait until the status reports the save.
+async function saveDraft() {
+  await page.keyboard.press("ControlOrMeta+s");
+  await page.locator(".sx-status").filter({ hasText: /^\s*Saved/ }).waitFor();
+}
 try {
   await page.goto(baseUrl, { waitUntil: "networkidle" });
   await page.getByRole("link", { name: "Start Creating" }).waitFor();
@@ -68,23 +73,23 @@ try {
     "https://example.com/legacy",
   );
   await page.getByRole("button", { name: "Redo", exact: true }).click();
-  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  await saveDraft();
   await page.reload();
   await page
     .getByRole("button", { name: "Edit Heading block 2", exact: true })
     .click();
   await page.waitForFunction(
     () =>
-      document.querySelector(".inspector-fields textarea")?.value ===
+      document.querySelector(".sx-fields textarea")?.value ===
       "A better hello.",
   );
-  await page.getByRole("button", { name: "Save block", exact: true }).click();
+  await page.getByRole("button", { name: "Save as reusable block", exact: true }).click();
   await page.getByRole("button", { name: "Saved", exact: true }).click();
-  await page.getByRole("button", { name: "Heading: A better hello." }).click();
+  await page.getByRole("button", { name: "Heading A better hello." }).click();
   assert.equal(await page.locator(".studio-block").count(), 7);
   await page.getByRole("button", { name: "Undo", exact: true }).click();
   assert.equal(await page.locator(".studio-block").count(), 6);
-  await page.getByRole("button", { name: "Layouts", exact: true }).click();
+  await page.getByRole("button", { name: "Blocks", exact: true }).click();
   await page.getByRole("button", { name: "Two columns", exact: true }).click();
   await page.getByLabel("Column 1").fill("First product");
   await page.getByLabel("Column 2").fill("Second product");
@@ -94,7 +99,6 @@ try {
   await page
     .getByRole("button", { name: "Move Two columns down", exact: true })
     .click();
-  await page.getByRole("button", { name: "Content", exact: true }).click();
   await page.getByRole("button", { name: "Paragraph", exact: true }).click();
   await page.getByLabel("Text", { exact: true }).fill("Drag me");
   const dragged = page.locator(".studio-block").filter({ hasText: "Drag me" });
@@ -123,13 +127,13 @@ try {
     .click();
   assert.ok(await page.locator(".mobile-preview").isVisible());
   await page
-    .getByRole("button", { name: "Preview email", exact: true })
+    .getByRole("button", { name: "Preview", exact: true })
     .click();
   assert.ok(
     await page.getByRole("dialog", { name: "Email preview" }).isVisible(),
   );
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  await saveDraft();
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export HTML", exact: true }).click();
   const download = await downloadPromise;
@@ -145,6 +149,8 @@ try {
   const firstDraft = new URL(page.url()).searchParams.get("draft");
   assert.ok(firstDraft && firstDraft !== "welcome");
   await page.goto(baseUrl + "/dashboard");
+  // Drafts are read from browser storage after hydration; wait for them before counting.
+  await page.locator(".saved-card").nth(1).waitFor();
   assert.equal(await page.locator(".saved-card").count(), 2, "Original legacy draft is migrated alongside the new gallery instance");
   assert.ok(await page.evaluate(() => localStorage.getItem("postly-draft-welcome")), "Legacy original is preserved");
   await page.evaluate(() => { localStorage.removeItem("postly-draft-welcome"); localStorage.removeItem("postly-document-welcome"); });
@@ -192,7 +198,6 @@ try {
   ]) {
     await page.getByRole("button", { name: kind, exact: true }).click();
   }
-  await page.getByRole("button", { name: "Layouts", exact: true }).click();
   await page.getByRole("button", { name: "Two columns", exact: true }).click();
   await page
     .getByRole("button", { name: "Three columns", exact: true })
@@ -213,21 +218,23 @@ try {
     });
   await page.waitForFunction(() =>
     document
-      .querySelector('.inspector-fields input[aria-label="Image URL"]')
+      .querySelector('.sx-fields input[aria-label="Image URL"]')
       ?.value.startsWith("data:image/png;base64,"),
   );
   await page
     .getByRole("button", { name: "Edit Heading block 1", exact: true })
     .click();
   await page.getByLabel("Headline", { exact: true }).fill("Every block works");
-  await page.getByLabel("Spacing (px)", { exact: true }).fill("12");
-  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  await page.locator("summary", { hasText: "More styling" }).click();
+  await page.getByLabel("Spacing", { exact: true }).fill("12");
+  await saveDraft();
   await page.reload();
   await page
     .getByRole("button", { name: "Edit Heading block 1", exact: true })
     .click();
+  await page.locator("summary", { hasText: "More styling" }).click();
   assert.equal(
-    await page.getByLabel("Spacing (px)", { exact: true }).inputValue(),
+    await page.getByLabel("Spacing", { exact: true }).inputValue(),
     "12",
   );
   assert.equal(await page.locator(".studio-block").count(), 12);
@@ -237,16 +244,17 @@ try {
   await page.goto(baseUrl + "/brand");
   await page.getByLabel("Business name", { exact: true }).fill("Acme Studio");
   await page
-    .getByLabel("Website URL", { exact: true })
+    .getByLabel("Website", { exact: true })
     .fill("https://example.com/acme");
-  await page.getByLabel("Primary color", { exact: true }).fill("#447755");
+  await page.getByLabel("Primary hex value", { exact: true }).fill("#447755");
+  await page.getByLabel("Primary hex value", { exact: true }).press("Enter");
   await page
     .getByRole("button", { name: "Save Brand Kit", exact: true })
     .click();
   await page.reload();
   await page.waitForFunction(
     () =>
-      document.querySelector(".brand-fields input")?.value === "Acme Studio",
+      document.querySelector('.bk-field input[placeholder="Your business"]')?.value === "Acme Studio",
   );
   await page.goto(baseUrl + "/editor?template=welcome");
   await page
@@ -259,12 +267,12 @@ try {
     await page.getByLabel("Text", { exact: true }).inputValue(),
     "Acme Studio",
   );
-  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  await saveDraft();
   await page.goto(baseUrl + "/editor?template=launch");
   await page
     .getByRole("button", { name: "Apply Brand Kit", exact: true })
     .click();
-  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  await saveDraft();
   const launchId = new URL(page.url()).searchParams.get("draft");
   const launchDoc = await page.evaluate(id => JSON.parse(localStorage.getItem("postly-document-" + id)), launchId);
   assert.equal(
@@ -278,12 +286,12 @@ try {
   console.log("PASS: Brand Kit persistence and reuse across templates");
   await page.getByRole("button", { name: "Edit Heading block 2", exact: true }).click();
   await page.getByLabel("Headline", { exact: true }).fill("Recovered after navigation");
-  await page.getByRole("link", { name: "Browse templates" }).click();
+  await page.locator(".et").getByRole("link", { name: "Templates", exact: true }).click();
   await page.goto(baseUrl + `/editor?draft=${launchId}`);
-  await page.getByRole("button", { name: "Recover changes", exact: true }).click();
+  await page.getByRole("button", { name: "Restore changes", exact: true }).click();
   await page.getByRole("button", { name: "Edit Heading block 2", exact: true }).click();
   assert.equal(await page.getByLabel("Headline", { exact: true }).inputValue(), "Recovered after navigation");
-  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  await saveDraft();
   console.log("PASS: Unique gallery instances, preserved migration originals, and recovery after navigation");
   await page.goto(baseUrl + "/pricing");
   await page.getByRole("button", { name: /Yearly/ }).click();
@@ -315,11 +323,8 @@ try {
   }
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(baseUrl);
-  await page.getByRole("button", { name: "Toggle navigation" }).click();
-  await page
-    .locator(".nav-links")
-    .getByRole("link", { name: "Templates", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Open menu" }).click();
+  await page.locator('.sh-drawer a[href="/templates"]').click();
   await page.waitForURL("**/templates");
   await page.goto(baseUrl + "/editor");
   await page.screenshot({

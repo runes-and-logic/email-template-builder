@@ -274,18 +274,21 @@ export function BrandKitEditor() {
       <div className="bk-layout">
         <form className="bk-form" onSubmit={e => { e.preventDefault(); void save(); }} noValidate>
           <Section icon={<Globe size={18} />} title="Identity" hint="Shown in your logo, footer and links.">
-            <label className={`bk-field ${nameError ? "has-error" : ""}`}>
-              <span className="bk-label">Business name</span>
-              <input value={brand.name} maxLength={200} placeholder="Your business" onChange={e => update("name", e.target.value)} aria-invalid={!!nameError} />
-              {nameError && <span className="bk-error"><AlertCircle size={13} /> {nameError}</span>}
-            </label>
-            <label className={`bk-field ${websiteError ? "has-error" : ""}`}>
-              <span className="bk-label">Website</span>
-              <input type="url" inputMode="url" value={brand.website} maxLength={2048} placeholder="https://yourbusiness.com" onChange={e => update("website", e.target.value)} aria-invalid={!!websiteError} />
-              {websiteError ? <span className="bk-error"><AlertCircle size={13} /> {websiteError}</span>
-                : websitePlaceholder ? <span className="bk-warn"><AlertCircle size={13} /> This is a placeholder address. Add your real website so buttons lead to it.</span>
-                : <span className="bk-hint">{website ? "Buttons and your logo link here." : "Add your website so buttons and your logo link to it."}</span>}
-            </label>
+            {/* Labels hold only the field name; hints and errors are linked with aria-describedby. */}
+            <div className={`bk-field ${nameError ? "has-error" : ""}`}>
+              <label className="bk-label" htmlFor="bk-name">Business name</label>
+              <input id="bk-name" value={brand.name} maxLength={200} placeholder="Your business" onChange={e => update("name", e.target.value)}
+                aria-invalid={!!nameError} aria-describedby={nameError ? "bk-name-msg" : undefined} />
+              {nameError && <span className="bk-error" id="bk-name-msg"><AlertCircle size={13} /> {nameError}</span>}
+            </div>
+            <div className={`bk-field ${websiteError ? "has-error" : ""}`}>
+              <label className="bk-label" htmlFor="bk-website">Website</label>
+              <input id="bk-website" type="url" inputMode="url" value={brand.website} maxLength={2048} placeholder="https://yourbusiness.com"
+                onChange={e => update("website", e.target.value)} aria-invalid={!!websiteError} aria-describedby="bk-website-msg" />
+              {websiteError ? <span className="bk-error" id="bk-website-msg"><AlertCircle size={13} /> {websiteError}</span>
+                : websitePlaceholder ? <span className="bk-warn" id="bk-website-msg"><AlertCircle size={13} /> This is a placeholder address. Add your real website so buttons lead to it.</span>
+                : <span className="bk-hint" id="bk-website-msg">{website ? "Buttons and your logo link here." : "Add your website so buttons and your logo link to it."}</span>}
+            </div>
             <div className="bk-field">
               <span className="bk-label">Logo</span>
               <div

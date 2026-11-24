@@ -3,6 +3,8 @@ export type PlanCatalog = { plans: Plan[]; paymentsEnabled: boolean };
 
 /** Server-side plan fetch so prices are in the initial HTML. Cached for 5 minutes; null if the backend is unreachable. */
 export async function getPlans(): Promise<PlanCatalog | null> {
+  // Demo mode never uses backend data; skip the request (keeps demo/CI builds quiet and fast).
+  if (process.env.NEXT_PUBLIC_APP_MODE !== "cloud") return null;
   const backend = process.env.BACKEND_URL || "http://127.0.0.1:3002";
   try {
     const response = await fetch(`${backend}/api/plans`, { next: { revalidate: 300 }, signal: AbortSignal.timeout(4000) });

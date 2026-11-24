@@ -27,6 +27,8 @@ export const siteUrl = resolveSiteUrl();
  * Cached for 5 minutes; returns null if the backend is unreachable so the page can fall back to client loading.
  */
 export async function getCatalog(): Promise<CatalogEntry[] | null> {
+  // Demo mode never uses backend data; skip the request (keeps demo/CI builds quiet and fast).
+  if (process.env.NEXT_PUBLIC_APP_MODE !== "cloud") return null;
   const backend = process.env.BACKEND_URL || "http://127.0.0.1:3002";
   try {
     const response = await fetch(`${backend}/api/catalog`, { next: { revalidate: 300 }, signal: AbortSignal.timeout(4000) });
