@@ -73,6 +73,6 @@ PostCSS is overridden to a patched release. npm still reports five transitive de
 
 ## Shared editor code
 
-The browser-safe email model, validation, templates, and renderer are distributed in `vendor/postly-email-core-1.0.0.tgz`. Their canonical source is `email-template-builder-be/packages/email-core/src/`. This local package lets the frontend install and build independently. Browser storage and upload UI clients remain here.
+The browser-safe email model, validation, templates, and renderer are distributed in `vendor/postly-email-core-1.0.1.tgz`. Their canonical source is `email-template-builder-be/packages/email-core/src/`. This local package lets the frontend install and build independently. Browser storage and upload UI clients remain here.
 
 Cloud screens verify their session through `/api/session`; all actual authorization runs in the backend. The local demo remains available without a running backend. See the backend operations guide for the two-service setup and migration steps.

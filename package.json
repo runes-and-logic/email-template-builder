@@ -14,7 +14,7 @@
     "test:proxy": "node scripts/check-proxy.mjs"
   },
   "dependencies": {
-    "@postly/email-core": "file:vendor/postly-email-core-1.0.0.tgz",
+    "@postly/email-core": "file:vendor/postly-email-core-1.0.1.tgz",
     "lucide-react": "^0.468.0",
     "next": "^15.3.0",
     "react": "^19.0.0",
