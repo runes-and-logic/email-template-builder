@@ -67,11 +67,12 @@ summary:focus-visible {
   outline: 3px solid #a88ad5;
   outline-offset: 4px;
 }
+/* No outline ring on form fields; focus is shown with an accent border instead. */
 input:focus,
 textarea:focus,
 select:focus {
-  outline: 2px solid #bca6df;
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--accent);
 }
 button {
   border: 0;

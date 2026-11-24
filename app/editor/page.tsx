@@ -1,8 +1,5 @@
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { Logo } from "@/components/site";
-import { cloudMode } from "@/lib/config";
 import { Workspace } from "@/components/workspace";
+import { EditorTopBar } from "@/components/editor-topbar";
 export const metadata = { title: "Your email workspace — Postly" };
 export default async function EditorPage({
   searchParams,
@@ -12,26 +9,12 @@ export default async function EditorPage({
   const { template, draft } = await searchParams;
   return (
     <main id="main-content" className="editor-page">
-      <div className="editor-page-nav">
-        <Logo />
-        <p>A little creativity. A very good email.</p>
-        <div>
-          <Link className="text-link" href="/templates">
-            Browse templates <ArrowUpRight size={14} />
-          </Link>
-          <Link className="text-link" href="/docs#export">
-            Export guide
-          </Link>
-        </div>
-      </div>
+      <EditorTopBar />
       <Workspace
         key={draft || template || "welcome"}
         initialId={template}
         draftId={draft}
       />
-      <p className="pricing-footnote">
-        {cloudMode ? "Cloud workspace · Changes save to your account." : "Local workspace · Drafts save in this browser."} Export includes your blocks, images, links, and styles.
-      </p>
     </main>
   );
 }

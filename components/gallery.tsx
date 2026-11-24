@@ -13,9 +13,10 @@ import {
 import { templates, templateCategories, type Template } from "@/lib/data";
 import { cloudMode } from "@/lib/config";
 import { CloudGallery } from "./cloud-gallery";
+import type { CatalogEntry } from "@/lib/catalog";
 import { EmailPreview } from "./email-preview";
-export function Gallery(props: { preview?: boolean; initialCategory?: string }) {
-  return cloudMode ? <CloudGallery {...props} /> : <LocalGallery {...props} />;
+export function Gallery({ initialTemplates, ...props }: { preview?: boolean; initialCategory?: string; initialTemplates?: CatalogEntry[] | null }) {
+  return cloudMode ? <CloudGallery {...props} initialTemplates={initialTemplates} /> : <LocalGallery {...props} />;
 }
 function LocalGallery({
   preview = false,

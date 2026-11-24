@@ -31,6 +31,12 @@ const RESEND_COOLDOWN = 30;
 type Notice = { tone: "error" | "info" | "success"; text: string } | null;
 type FieldErrors = Partial<Record<"name" | "email" | "password", string>>;
 
+/** Where to go after signing in: a same-site path from ?next=, otherwise My Templates. */
+function safeNext(): string {
+  const next = new URLSearchParams(location.search).get("next") || "";
+  return next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/\\") ? next : "/dashboard";
+}
+
 function friendlyError(error: unknown): string {
   if (error instanceof ApiError) return error.message;
   if (error instanceof TypeError || error instanceof SyntaxError) return "We couldn’t reach Postly. Check your connection and try again.";
@@ -165,6 +171,13 @@ function SignupForm({ plan }: { plan?: string }) {
   const dismiss = useCallback(() => setNotice(null), []);
   const [sentTo, setSentTo] = useState("");
   const [cooldown, setCooldown] = useState(0);
+  // Paid plans can be on hold; only promise an upgrade when the backend says billing is open.
+  const [paymentsEnabled, setPaymentsEnabled] = useState(false);
+  useEffect(() => {
+    if (!plan) return;
+    api<{ paymentsEnabled?: boolean }>("/api/plans").then(result => setPaymentsEnabled(result.paymentsEnabled === true)).catch(() => {});
+  }, [plan]);
+  const paidPlan = plan && plan.toLowerCase() !== "free" ? plan : undefined;
   const refs = { name: useRef<HTMLInputElement>(null), email: useRef<HTMLInputElement>(null), password: useRef<HTMLInputElement>(null) };
   const heading = useRef<HTMLHeadingElement>(null);
 
@@ -230,7 +243,7 @@ function SignupForm({ plan }: { plan?: string }) {
         <ol className="au-steps">
           <li><span>1</span><p>Open the email from Postly.</p></li>
           <li><span>2</span><p>Click the confirmation link inside.</p></li>
-          <li><span>3</span><p>You’ll land in your new workspace{plan ? `, ready to activate ${plan}` : ""}.</p></li>
+          <li><span>3</span><p>You’ll land in your new workspace{paidPlan && paymentsEnabled ? `, ready to activate ${paidPlan}` : ""}.</p></li>
         </ol>
         <p className="au-muted">Can’t find it? Check spam or promotions. It can take a minute to arrive.</p>
         <div className="au-actions">
@@ -251,11 +264,13 @@ function SignupForm({ plan }: { plan?: string }) {
       <span className="au-eyebrow">YOUR CREATIVE SPACE AWAITS</span>
       <h1>Create your account</h1>
       <p className="au-lead">Start designing beautiful, responsive emails in minutes. No credit card required.</p>
-      {plan && (
+      {paidPlan && (
         <div className="au-plan">
           <Sparkles size={16} />
-          <p><strong>{plan} plan selected.</strong> You can activate it from Account &amp; billing once your email is confirmed.</p>
-          <Link href="/pricing">Change</Link>
+          {paymentsEnabled
+            ? <p><strong>{paidPlan} plan selected.</strong> You can activate it from Account &amp; billing once your email is confirmed.</p>
+            : <p><strong>{paidPlan} is coming soon.</strong> You’ll start on the Free plan and can upgrade once paid plans open.</p>}
+          <Link href="/pricing">{paymentsEnabled ? "Change" : "Plans"}</Link>
         </div>
       )}
       <Banner notice={notice} onDismiss={dismiss} onRetry={notice?.tone === "error" ? () => void register() : undefined} />
@@ -323,7 +338,7 @@ function SigninForm() {
         method: "POST",
         body: JSON.stringify({ action: mode, email: email.trim(), password }),
       });
-      if (mode === "signin") { location.assign("/dashboard"); return; }
+      if (mode === "signin") { location.assign(safeNext()); return; }
       setNotice({ tone: "success", text: result.message || "If an account exists, a reset link is on its way." });
     } catch (error) {
       setNotice({ tone: "error", text: friendlyError(error) });

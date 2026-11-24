@@ -1,0 +1,152 @@
+/* Editor app bar. Fixed height so the page never shifts while the session loads. */
+.et {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 56px;
+  padding: 0 4px 16px;
+  box-sizing: content-box;
+}
+.et-left,
+.et-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+.et .logo {
+  font-size: 24px;
+  flex: none;
+}
+.et-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 16px;
+  border-left: 1px solid #ddd5e6;
+  font-size: 13px;
+  color: #8a7f96;
+  white-space: nowrap;
+}
+.et-crumbs a:hover {
+  color: var(--accent);
+}
+.et-crumbs [aria-current] {
+  color: var(--ink);
+  font-weight: 550;
+}
+.et-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.et-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #5d5768;
+  white-space: nowrap;
+}
+.et-links a svg {
+  color: #9b8fa9;
+}
+.et-links a:hover {
+  background: #e9e3f1;
+  color: var(--ink);
+}
+.et-account {
+  position: relative;
+}
+.et-avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #8b67d9, #6941c6);
+  color: #fff;
+  font-weight: 650;
+  font-size: 14px;
+  box-shadow: 0 0 0 3px #f4f1f7, 0 0 0 4px #dcd0ee;
+}
+.et-avatar:hover,
+.et-avatar[aria-expanded="true"] {
+  box-shadow: 0 0 0 3px #f4f1f7, 0 0 0 5px #bfa9e6;
+}
+.et-menu {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 240px;
+  padding: 6px;
+  border: 1px solid #e7e1ee;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 24px 60px #2a1d401f, 0 2px 6px #2a1d400d;
+  display: grid;
+}
+.et-menu[hidden] {
+  display: none;
+}
+.et-menu p {
+  margin: 0 0 4px;
+  padding: 8px 10px 10px;
+  font-size: 12px;
+  color: var(--muted);
+  border-bottom: 1px solid #f0ebf4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.et-menu a,
+.et-menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  font-size: 13.5px;
+  color: var(--ink);
+  text-align: left;
+}
+.et-menu a svg,
+.et-menu button svg {
+  color: var(--accent);
+}
+.et-menu a:hover,
+.et-menu button:hover {
+  background: #f6f2fb;
+}
+@media (max-width: 900px) {
+  .et-links span {
+    display: none;
+  }
+  .et-links a {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+}
+@media (max-width: 560px) {
+  .et {
+    height: 48px;
+    padding-bottom: 12px;
+  }
+  .et .logo {
+    font-size: 21px;
+  }
+  .et-crumbs {
+    display: none;
+  }
+  .et-left,
+  .et-right {
+    gap: 8px;
+  }
+}

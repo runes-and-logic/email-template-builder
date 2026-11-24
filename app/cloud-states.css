@@ -132,3 +132,17 @@
     width: 100%;
   }
 }
+
+/* Payments on hold */
+.payments-held {
+  margin-bottom: 20px;
+  border-style: solid;
+  border-color: #e6dcf3;
+  background: linear-gradient(135deg, #f7f2fd, #fdfaf5);
+}
+.price-held {
+  justify-content: center;
+  cursor: default;
+  opacity: 0.7;
+  pointer-events: none;
+}

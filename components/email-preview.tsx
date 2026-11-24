@@ -5,7 +5,7 @@ import {
   Package,
   ArrowRight,
 } from "lucide-react";
-import { documentHtml } from "@/lib/email";
+import { previewHtml } from "@/lib/email";
 import { fromTemplate } from "@/lib/workspace";
 import type { Template } from "@/lib/data";
 export function IllustratedPreview({
@@ -116,5 +116,5 @@ export function IllustratedPreview({
 }
 
 export function EmailPreview({ template, mini = false }: { template: Template; mini?: boolean }) {
-  return <iframe className={`canonical-preview ${mini ? "canonical-mini" : ""}`} title={`Email preview: ${template.name}`} sandbox="" loading="lazy" srcDoc={documentHtml(fromTemplate(template))} tabIndex={-1} />;
+  return <iframe className={`canonical-preview ${mini ? "canonical-mini" : ""}`} title={`Email preview: ${template.name}`} sandbox="" loading="lazy" srcDoc={previewHtml(fromTemplate(template))} tabIndex={-1} />;
 }

@@ -9,6 +9,7 @@ import {
   Minus,
 } from "lucide-react";
 import { CloudPricing } from "./cloud-pricing";
+import type { PlanCatalog } from "@/lib/plans";
 import { cloudMode } from "@/lib/config";
 import { plans, annualDiscount } from "@/lib/data";
 export function Logo() {
@@ -91,8 +92,8 @@ export function FinalCTA() {
     </section>
   );
 }
-export function Pricing(props: { compact?: boolean }) {
-  return cloudMode ? <CloudPricing /> : <LocalPricing {...props} />;
+export function Pricing(props: { compact?: boolean; initial?: PlanCatalog | null }) {
+  return cloudMode ? <CloudPricing compact={props.compact} initial={props.initial} /> : <LocalPricing compact={props.compact} />;
 }
 function LocalPricing({ compact = false }: { compact?: boolean }) {
   const [annual, setAnnual] = useState(false);

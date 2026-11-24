@@ -14,7 +14,7 @@ import {
 import { cloudMode } from "@/lib/config";
 import { CloudDashboard } from "./cloud-dashboard";
 import { templates } from "@/lib/data";
-import { documentHtml } from "@/lib/email";
+import { previewHtml } from "@/lib/email";
 import {
   fromTemplate,
   readDocuments,
@@ -184,7 +184,7 @@ function LocalDashboard() {
                 >
                   <iframe loading="lazy"
                     title={`Preview of ${d.name}`}
-                    srcDoc={documentHtml(d)}
+                    srcDoc={previewHtml(d)}
                     sandbox=""
                     tabIndex={-1}
                   />

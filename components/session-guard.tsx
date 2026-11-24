@@ -3,7 +3,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { cloudMode } from "@/lib/config";
 
-const protectedPaths = ["/dashboard", "/editor", "/brand", "/account", "/platform"];
+// /editor, /brand and /dashboard are excluded: they check the session themselves and show their own loader and sign-in redirect.
+const protectedPaths = ["/account", "/platform"];
 export function SessionGuard({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();

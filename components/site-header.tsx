@@ -46,7 +46,7 @@ type Session = { status: "guest" | "user"; email?: string };
  * Signed-in state for the header only. Never redirects; protected pages are handled by SessionGuard.
  * Starts as "guest" so the server render and first paint match, with no placeholder that later resizes.
  */
-function useSession(): Session {
+export function useSession(): Session {
   const [session, setSession] = useState<Session>({ status: "guest" });
   useEffect(() => {
     if (!cloudMode) return;
@@ -113,7 +113,7 @@ function Dropdown({ label, items, active, open, onToggle, onClose, footer }: {
   );
 }
 
-async function signOut() {
+export async function signOut() {
   try { await api("/api/auth", { method: "POST", body: JSON.stringify({ action: "signout" }) }); }
   finally { location.assign("/login"); }
 }
@@ -164,7 +164,7 @@ export function SiteHeader() {
         <nav className="sh-nav" aria-label="Main navigation">
           <Dropdown label="Product" items={productItems} open={menu === "product"} onToggle={() => toggle("product")} onClose={close}
             active={productItems.some(item => item.href !== "/templates" && isActive(pathname, item.href))}
-            footer={<Link className="sh-panel-footer" href="/editor" onClick={close}>Start a new email <ArrowUpRight size={14} /></Link>} />
+            footer={<Link className="sh-panel-footer" href="/editor?template=blank" onClick={close}>Start a new email <ArrowUpRight size={14} /></Link>} />
           {sectionLinks.map(link => (
             <Link key={link.id} href={link.href} className={`sh-link ${activeSection === link.id ? "is-active" : ""}`} onClick={close}>{link.label}</Link>
           ))}
@@ -180,7 +180,7 @@ export function SiteHeader() {
             <Link className="button small sh-cta" href="/signup">Get started <ArrowUpRight size={15} /></Link>
           </>}
           {signedIn && <>
-            <Link className="button small sh-cta" href="/editor">New email <PenLine size={14} /></Link>
+            <Link className="button small sh-cta" href="/editor?template=blank">New email <PenLine size={14} /></Link>
             <div className={`sh-dropdown sh-account ${menu === "account" ? "is-open" : ""}`}>
               <button type="button" className="sh-avatar" aria-label="Account menu" aria-expanded={menu === "account"} aria-controls="sh-account-menu" onClick={() => toggle("account")}>{initial}</button>
               <div className="sh-panel sh-panel-right" id="sh-account-menu" hidden={menu !== "account"}>
@@ -217,7 +217,7 @@ export function SiteHeader() {
           <div className="sh-drawer-actions">
             {signedIn ? <>
               <p className="sh-account-email">{session.email}</p>
-              <Link className="button" href="/editor" onClick={close}>New email <PenLine size={15} /></Link>
+              <Link className="button" href="/editor?template=blank" onClick={close}>New email <PenLine size={15} /></Link>
               <Link className="button secondary" href="/account" onClick={close}>Account & billing</Link>
               <button type="button" className="button secondary" onClick={() => void signOut()}>Sign out</button>
             </> : <>

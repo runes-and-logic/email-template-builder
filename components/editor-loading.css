@@ -1,0 +1,329 @@
+/* Editor loading skeleton, progress card, and state cards. Mirrors .studio dimensions. */
+.es {
+  position: relative;
+}
+.es-frame {
+  background: #fff;
+  border: 1px solid #e3dcea;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px #2a1d400a;
+}
+.es-frame i {
+  display: block;
+  height: 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #efebf3 0%, #f8f6fa 50%, #efebf3 100%);
+  background-size: 200% 100%;
+  animation: es-shimmer 1.5s ease-in-out infinite;
+}
+@keyframes es-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+.es-frame .w-24 { width: 24%; }
+.es-frame .w-32 { width: 32%; }
+.es-frame .w-40 { width: 40%; }
+.es-frame .w-48 { width: 48%; }
+.es-frame .w-50 { width: 50%; }
+.es-frame .w-60 { width: 60%; }
+.es-frame .w-70 { width: 70%; }
+.es-frame .w-80 { width: 80%; }
+.es-frame .w-90 { width: 90%; }
+.es-frame .h-14 { height: 14px; }
+.es-frame .h-18 { height: 18px; }
+.es-frame .h-28 { height: 28px; }
+.es-frame .center { margin-inline: auto; }
+
+.es-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 16px 12px 20px;
+  border-bottom: 1px solid #ece7f1;
+  min-height: 63px;
+  box-sizing: border-box;
+}
+.es-stack {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 360px;
+  max-width: 50%;
+}
+.es-stack .pill {
+  flex: none;
+  width: 64px;
+  height: 26px;
+  border-radius: 99px;
+}
+.es-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.es-row .sq {
+  width: 70px;
+  height: 38px;
+  border-radius: 10px;
+}
+.es-row .btn {
+  width: 104px;
+  height: 38px;
+  border-radius: 10px;
+}
+.es-row .btn.accent {
+  background: linear-gradient(90deg, #dcd0f1 0%, #ebe3f8 50%, #dcd0f1 100%);
+  background-size: 200% 100%;
+}
+.es-grid {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 300px;
+  height: calc(100dvh - 185px);
+  min-height: 544px;
+}
+.es-library .tabs {
+  height: 36px;
+  border-radius: 10px;
+}
+.es-library,
+.es-inspector {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 20px 16px;
+}
+.es-library {
+  border-right: 1px solid #ece7f1;
+  background: #fcfbfd;
+}
+.es-inspector {
+  border-left: 1px solid #ece7f1;
+}
+.es-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.es-tiles i {
+  height: 72px;
+  border-radius: 10px;
+}
+.es-inspector .field {
+  height: 38px;
+  border-radius: 8px;
+}
+.es-canvas {
+  background: #f4f1f7;
+  padding: 88px 24px 36px;
+}
+.es-email {
+  display: grid;
+  gap: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 36px 32px 0;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 6px 20px #2a1d400a;
+}
+.es-email .es-button {
+  width: 180px;
+  height: 46px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+.es-email .es-image {
+  height: 180px;
+  border-radius: 0;
+  margin-inline: -32px;
+  margin-top: 12px;
+}
+
+/* Progress card floats over the skeleton canvas. */
+.es-card {
+  position: absolute;
+  z-index: 2;
+  top: 210px;
+  left: 50%;
+  translate: -50% 0;
+  width: min(380px, calc(100% - 32px));
+  display: flex;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 1px solid #e4dcef;
+  border-radius: 16px;
+  background: #fffffff2;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 24px 60px #2a1d401f, 0 2px 6px #2a1d400d;
+}
+.es-card-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.es-spin {
+  animation: es-spin 0.9s linear infinite;
+}
+@keyframes es-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.es-card strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 2px 0 10px;
+}
+.es-card ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.es-card li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: #a39ab0;
+  transition: color 0.2s;
+}
+.es-card li.is-active {
+  color: var(--ink);
+  font-weight: 550;
+}
+.es-card li.is-done {
+  color: var(--muted);
+}
+.es-dot {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 99px;
+  border: 1.5px solid #d8d0e3;
+  color: #fff;
+  transition: background 0.2s, border-color 0.2s;
+}
+.is-active .es-dot {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 3px #fff;
+  background: var(--accent);
+}
+.is-done .es-dot {
+  border-color: #2f7d4f;
+  background: #2f7d4f;
+}
+
+/* State cards (not found / load failed) */
+.es-state {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 72px 24px;
+  min-height: 560px;
+  align-content: center;
+  background: #fff;
+  border: 1px solid #dfd9e7;
+  border-radius: 12px;
+}
+.es-state-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: var(--accent-light);
+  color: var(--accent);
+  box-shadow: 0 0 0 8px #6941c60d;
+  margin-bottom: 8px;
+}
+.es-state-icon.is-error {
+  background: #fff1f3;
+  color: #b3263a;
+  box-shadow: 0 0 0 8px #d14b5c12;
+}
+.es-state h1 {
+  margin: 0;
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+.es-state p {
+  margin: 0;
+  max-width: 440px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.es-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .es-frame i,
+  .es-spin {
+    animation: none;
+  }
+}
+@media (max-width: 1200px) {
+  .es-grid {
+    grid-template-columns: 210px minmax(0, 1fr) 270px;
+  }
+}
+@media (max-width: 1000px) {
+  .es-grid {
+    grid-template-columns: 200px minmax(0, 1fr);
+    height: 70vh;
+    min-height: 520px;
+  }
+  .es-inspector {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  .es-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 520px;
+  }
+  .es-library {
+    display: none;
+  }
+  .es-row .sq {
+    display: none;
+  }
+  .es-card {
+    top: 160px;
+  }
+  .es-canvas {
+    padding: 20px 12px;
+  }
+  .es-email {
+    padding-inline: 20px;
+  }
+  .es-email .es-image {
+    margin-inline: -20px;
+  }
+}
+.es-state-icon.is-limit {
+  background: #fdf5e6;
+  color: #9a6a12;
+  box-shadow: 0 0 0 8px #e0a43a14;
+}

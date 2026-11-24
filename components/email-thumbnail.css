@@ -1,0 +1,65 @@
+/* Shared email thumbnail: the real email as a "paper" sheet pinned to a fixed top offset. */
+.tg-thumb-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+/* The email "paper": same top offset in every card so rows line up. */
+.tg-paper {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+  background: #fff;
+  box-shadow: 0 1px 2px #2a1d400f, 0 12px 28px #2a1d401a;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.tg-paper.is-ready {
+  opacity: 1;
+}
+.tg-paper:not(.is-long) {
+  border-radius: 8px;
+}
+.thumb-host:hover .tg-paper,
+.thumb-host:focus-within .tg-paper {
+  transform: translateY(-4px);
+  box-shadow: 0 1px 2px #2a1d400f, 0 20px 40px #2a1d4026;
+}
+.tg-paper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0;
+  transform-origin: top left;
+  pointer-events: none;
+}
+/* Long emails: fade the cropped edge into the backdrop. */
+.tg-paper.is-long::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 30%;
+  background: linear-gradient(180deg, #ffffff00, #efebf4);
+  pointer-events: none;
+}
+.thumb-host:hover .tg-paper.is-long::after {
+  background: linear-gradient(180deg, #ffffff00, #e9e3f2);
+}
+.tg-paper-empty {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  width: 84%;
+  border: 1.5px dashed #d8cde6;
+  border-radius: 8px;
+  background: #ffffffb3;
+  color: #9a8fa6;
+  font-size: 12.5px;
+  font-weight: 550;
+}

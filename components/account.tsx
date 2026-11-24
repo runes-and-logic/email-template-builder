@@ -8,6 +8,7 @@ type Plan = { id: string; name: string; monthly_paise: number; yearly_paise: num
 export function Account() {
   const [account, setAccount] = useState<AccountData | null>(null);
   const [plans, setPlans] = useState<Plan[]>([]);
+  const [paymentsEnabled, setPaymentsEnabled] = useState(false);
   const [period, setPeriod] = useState("monthly");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -16,7 +17,7 @@ export function Account() {
   const [memberRole, setMemberRole] = useState("editor");
   useEffect(() => {
     if (!cloudMode) return;
-    Promise.all([api<AccountData>("/api/account"), api<{ plans: Plan[] }>("/api/plans"), api<{ workspaces: typeof workspaces }>("/api/workspaces")]).then(([data, catalog, spaces]) => { setAccount(data); setPlans(catalog.plans); setWorkspaces(spaces.workspaces); }).catch(error => setMessage(error.message));
+    Promise.all([api<AccountData>("/api/account"), api<{ plans: Plan[]; paymentsEnabled?: boolean }>("/api/plans"), api<{ workspaces: typeof workspaces }>("/api/workspaces")]).then(([data, catalog, spaces]) => { setAccount(data); setPlans(catalog.plans); setPaymentsEnabled(catalog.paymentsEnabled === true); setWorkspaces(spaces.workspaces); }).catch(error => setMessage(error.message));
   }, []);
   async function action(run: () => Promise<void>) {
     setBusy(true); setMessage("");
@@ -32,8 +33,11 @@ export function Account() {
       <p>{account.plan.name} · {account.usage.documents} / {account.plan.document_limit} templates · {(account.usage.assets / 1048576).toFixed(1)} / {(account.plan.asset_limit / 1048576).toFixed(0)} MB assets</p>
       {account.subscription && <p>Subscription: {account.subscription.status}. Current period ends {account.subscription.current_end ? new Date(account.subscription.current_end).toLocaleDateString() : "—"}.</p>}
       <div className="studio-actions"><Link className="button secondary" href="/dashboard">My Templates</Link><Link className="button secondary" href="/account/password">Change password</Link><Link className="text-link" href="/platform">Platform administration</Link><button className="button secondary" disabled={busy} onClick={() => void action(async () => { await api("/api/auth", { method: "POST", body: JSON.stringify({ action: "signout" }) }); location.assign("/login"); })}>Sign out</button></div>
-      {account.role === "owner" && <><h2>Subscription plans</h2><label>Billing period<select value={period} onChange={event => setPeriod(event.target.value)}><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></label>
+      {account.role === "owner" && !paymentsEnabled && <p className="inline-notice" role="status">Paid plans are paused for now. Your workspace stays on the {account.plan.name} plan; upgrades will open here when billing returns.</p>}
+      {account.role === "owner" && paymentsEnabled && <><h2>Subscription plans</h2><label>Billing period<select value={period} onChange={event => setPeriod(event.target.value)}><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></label>
         <div className="account-plans">{plans.filter(plan => plan.id !== "free").map(plan => <section key={plan.id}><h3>{plan.name}</h3><p>{new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format((period === "monthly" ? plan.monthly_paise : plan.yearly_paise) / 100)} / {period === "monthly" ? "month" : "year"}</p><p>{plan.document_limit} templates</p><button className="button" disabled={busy || account.subscription?.status === "active"} onClick={() => void action(async () => { const result = await api<{ url: string }>("/api/billing/checkout", { method: "POST", body: JSON.stringify({ plan: plan.id, interval: period }) }); location.assign(result.url); })}>Continue to checkout</button></section>)}</div>
+      </>}
+      {account.role === "owner" && <>
         {account.subscription?.status === "active" && <details><summary>Cancel subscription</summary><p>Your paid access continues through the current billing period.</p><button className="button secondary" disabled={busy} onClick={() => void action(async () => { const result = await api<{ message: string }>("/api/billing/cancel", { method: "POST", body: "{}" }); setMessage(result.message); })}>Confirm cancellation at period end</button></details>}
         <h2>Team access</h2><p>Add an existing, verified account to this workspace. Owners retain control of billing and membership.</p><form onSubmit={event => { event.preventDefault(); void action(async () => { await api("/api/workspaces/members", { method: "POST", body: JSON.stringify({ email: memberEmail, role: memberRole }) }); setMemberEmail(""); setMessage("Workspace access updated."); }); }}><label>Member email<input required type="email" value={memberEmail} onChange={event => setMemberEmail(event.target.value)} /></label><label>Access<select value={memberRole} onChange={event => setMemberRole(event.target.value)}><option value="editor">Editor</option><option value="viewer">Viewer</option><option value="remove">Remove access</option></select></label><button className="button secondary" disabled={busy}>Update member access</button></form>
       </>}
