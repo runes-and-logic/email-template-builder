@@ -2,9 +2,10 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { cloudMode } from "@/lib/config";
+import { SkHeading, SkLabel, SkTable } from "./skeleton";
 
-// /editor, /brand and /dashboard are excluded: they check the session themselves and show their own loader and sign-in redirect.
-const protectedPaths = ["/account", "/platform"];
+// Pages with their own session handling (editor, Brand Kit, dashboard, account) are not listed here.
+const protectedPaths = ["/platform"];
 export function SessionGuard({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -26,5 +27,6 @@ export function SessionGuard({ children }: { children: ReactNode }) {
     return () => controller.abort();
   }, [required, pathname, router, retry]);
   if (!required || verifiedPath === pathname) return children;
-  return <main id="main-content" className="container prose-page"><p role={error ? "alert" : "status"}>{error || "Opening your workspace…"}</p>{error && <button className="button" onClick={() => setRetry(value => value + 1)}>Retry</button>}</main>;
+  if (!error) return <main id="main-content" className="container sk-page" aria-busy="true"><SkLabel>Opening your workspace…</SkLabel><SkHeading /><SkTable /></main>;
+  return <main id="main-content" className="container prose-page"><p role="alert">{error}</p>{error && <button className="button" onClick={() => setRetry(value => value + 1)}>Retry</button>}</main>;
 }

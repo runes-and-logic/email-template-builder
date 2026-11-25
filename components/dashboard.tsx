@@ -12,6 +12,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { cloudMode } from "@/lib/config";
+import { SkCards, SkLabel } from "./skeleton";
 import { CloudDashboard } from "./cloud-dashboard";
 import { templates } from "@/lib/data";
 import { previewHtml } from "@/lib/email";
@@ -170,8 +171,9 @@ function LocalDashboard() {
           </p>
         )}
         {loading ? (
-          <div className="dashboard-loading" role="status">
-            Opening your workspace…
+          <div aria-busy="true">
+            <SkLabel>Opening your workspace…</SkLabel>
+            <SkCards count={4} />
           </div>
         ) : filtered.length ? (
           <div className="dashboard-grid">

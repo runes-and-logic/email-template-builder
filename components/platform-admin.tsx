@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
+import { SkLabel, SkTable } from "./skeleton";
 import type { Document } from "@/lib/workspace";
 type Records = { rows: Record<string, unknown>[]; count: number; role: string; sections: string[]; section: string };
 export function PlatformAdmin() {
@@ -36,7 +37,7 @@ export function PlatformAdmin() {
     {message && <p className="inline-notice" role="status">{message}</p>}
     <nav className="studio-actions" aria-label="Administration sections">{data?.sections.map(item => <button key={item} className="button secondary small" aria-pressed={item === active} onClick={() => { setSection(item); setPage(0); setSearch(""); }}>{item}</button>)}</nav>
     {data && <label>Search records<input value={search} onChange={event => { setSearch(event.target.value); setPage(0); }} /></label>}
-    {loading ? <p role="status">Loading records…</p> : data && <><div className="admin-table-scroll"><table><thead><tr>{Object.keys(data.rows[0] || {}).map(key => <th key={key}>{key.replaceAll("_", " ")}</th>)}</tr></thead><tbody>{data.rows.map((row, index) => <tr key={String(row.id || row.user_id || row.workspace_id || index)}>{Object.entries(row).map(([key, value]) => <td key={key}>{value === null ? "—" : String(value)}</td>)}</tr>)}</tbody></table></div><div className="studio-actions"><button className="button secondary small" disabled={page === 0} onClick={() => setPage(value => value - 1)}>Previous</button><span>{data.count} records · page {page + 1}</span><button className="button secondary small" disabled={(page + 1) * 20 >= data.count} onClick={() => setPage(value => value + 1)}>Next</button></div></>}
+    {loading ? <div aria-busy="true"><SkLabel>Loading records…</SkLabel><SkTable rows={8} cols={5} /></div> : data && <><div className="admin-table-scroll"><table><thead><tr>{Object.keys(data.rows[0] || {}).map(key => <th key={key}>{key.replaceAll("_", " ")}</th>)}</tr></thead><tbody>{data.rows.map((row, index) => <tr key={String(row.id || row.user_id || row.workspace_id || index)}>{Object.entries(row).map(([key, value]) => <td key={key}>{value === null ? "—" : String(value)}</td>)}</tr>)}</tbody></table></div><div className="studio-actions"><button className="button secondary small" disabled={page === 0} onClick={() => setPage(value => value - 1)}>Previous</button><span>{data.count} records · page {page + 1}</span><button className="button secondary small" disabled={(page + 1) * 20 >= data.count} onClick={() => setPage(value => value + 1)}>Next</button></div></>}
     {active === "templates" && <form onSubmit={event => {
       event.preventDefault(); const form = new FormData(event.currentTarget); const document = documents.find(item => item.id === form.get("document"));
       if (document) void submit({ section: "templates", document, templateId: form.get("templateId"), published: form.get("published") === "on" });

@@ -23,12 +23,13 @@ import { Logo } from "./site";
 import { api, ApiError } from "@/lib/api";
 import "./auth.css";
 
-const PASSWORD_MIN = 12;
+export const PASSWORD_MIN = 12;
 const PASSWORD_MAX = 128;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const RESEND_COOLDOWN = 30;
+// Supabase allows one auth email per address about every 60 seconds.
+const RESEND_COOLDOWN = 60;
 
-type Notice = { tone: "error" | "info" | "success"; text: string } | null;
+export type Notice = { tone: "error" | "info" | "success"; text: string } | null;
 type FieldErrors = Partial<Record<"name" | "email" | "password", string>>;
 
 /** Where to go after signing in: a same-site path from ?next=, otherwise My Templates. */
@@ -37,14 +38,14 @@ function safeNext(): string {
   return next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/\\") ? next : "/dashboard";
 }
 
-function friendlyError(error: unknown): string {
+export function friendlyError(error: unknown): string {
   if (error instanceof ApiError) return error.message;
   if (error instanceof TypeError || error instanceof SyntaxError) return "We couldn’t reach Postly. Check your connection and try again.";
   return error instanceof Error ? error.message : "Something went wrong. Please try again.";
 }
 
 /** Rough, informational strength score (0–4). The backend only enforces length. */
-function passwordScore(password: string) {
+export function passwordScore(password: string) {
   if (!password) return 0;
   let score = password.length >= PASSWORD_MIN ? 1 : 0;
   if (password.length >= 16) score++;
@@ -52,9 +53,9 @@ function passwordScore(password: string) {
   if (/\d/.test(password) && /[^A-Za-z0-9]/.test(password)) score++;
   return password.length < PASSWORD_MIN ? Math.min(score, 1) : Math.max(score, 1);
 }
-const strengthLabels = ["Too short", "Okay", "Good", "Strong", "Excellent"];
+export const strengthLabels = ["Too short", "Okay", "Good", "Strong", "Excellent"];
 
-function Field({ id, label, icon, error, hint, children, action }: {
+export function Field({ id, label, icon, error, hint, children, action }: {
   id: string; label: string; icon: ReactNode; error?: string; hint?: ReactNode; children: ReactNode; action?: ReactNode;
 }) {
   return (
@@ -75,15 +76,15 @@ function Field({ id, label, icon, error, hint, children, action }: {
   );
 }
 
-function PasswordInput({ id, value, onChange, autoComplete, invalid, describedBy, inputRef }: {
+export function PasswordInput({ id, value, onChange, autoComplete, invalid, describedBy, inputRef, placeholder }: {
   id: string; value: string; onChange: (value: string) => void; autoComplete: string; invalid: boolean; describedBy?: string;
-  inputRef?: React.Ref<HTMLInputElement>;
+  inputRef?: React.Ref<HTMLInputElement>; placeholder?: string;
 }) {
   const [visible, setVisible] = useState(false);
   return <>
     <input ref={inputRef} id={id} name="password" type={visible ? "text" : "password"} autoComplete={autoComplete} value={value}
       onChange={event => onChange(event.target.value)} maxLength={PASSWORD_MAX} aria-invalid={invalid} aria-describedby={describedBy}
-      placeholder={autoComplete === "new-password" ? `At least ${PASSWORD_MIN} characters` : "Your password"} />
+      placeholder={placeholder || (autoComplete === "new-password" ? `At least ${PASSWORD_MIN} characters` : "Your password")} />
     <button type="button" className="au-reveal" onClick={() => setVisible(v => !v)} aria-label={visible ? "Hide password" : "Show password"} aria-pressed={visible}>
       {visible ? <EyeOff size={17} /> : <Eye size={17} />}
     </button>
@@ -91,7 +92,7 @@ function PasswordInput({ id, value, onChange, autoComplete, invalid, describedBy
 }
 
 /** Floating notice: overlays the page instead of pushing the form down, so it never adds scroll. */
-function Banner({ notice, onRetry, onDismiss }: { notice: Notice; onRetry?: () => void; onDismiss: () => void }) {
+export function Banner({ notice, onRetry, onDismiss }: { notice: Notice; onRetry?: () => void; onDismiss: () => void }) {
   // Success messages fade on their own; errors stay until dismissed or the next attempt.
   useEffect(() => {
     if (notice?.tone !== "success") return;
@@ -200,13 +201,16 @@ function SignupForm({ plan }: { plan?: string }) {
     setBusy(true);
     setNotice(null);
     try {
+      // Resend uses Supabase's dedicated resend (no password); the first send creates the account.
       await api("/api/auth", {
         method: "POST",
-        body: JSON.stringify({ action: "signup", name: name.trim(), email: email.trim(), password }),
+        body: JSON.stringify(isResend
+          ? { action: "resend", email: email.trim() }
+          : { action: "signup", name: name.trim(), email: email.trim(), password }),
       });
       setSentTo(email.trim());
       setCooldown(RESEND_COOLDOWN);
-      if (isResend) setNotice({ tone: "success", text: "We’ve sent another confirmation email." });
+      if (isResend) setNotice({ tone: "success", text: "We’ve sent another confirmation email. It can take a minute to arrive." });
     } catch (error) {
       const text = friendlyError(error);
       if (error instanceof ApiError && error.status === 422 && /password/i.test(text)) {
@@ -309,13 +313,21 @@ function SignupForm({ plan }: { plan?: string }) {
 
 function SigninForm() {
   const [mode, setMode] = useState<"signin" | "reset">("signin");
+  // /login?mode=reset opens "Reset your password" directly (used by expired reset links).
+  useEffect(() => { if (new URLSearchParams(location.search).get("mode") === "reset") setMode("reset"); }, []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [notice, setNotice] = useState<Notice>(null);
   const [busy, setBusy] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
   const dismiss = useCallback(() => setNotice(null), []);
   const emailRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!cooldown) return;
+    const timer = setTimeout(() => setCooldown(value => value - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [cooldown]);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -340,6 +352,7 @@ function SigninForm() {
       });
       if (mode === "signin") { location.assign(safeNext()); return; }
       setNotice({ tone: "success", text: result.message || "If an account exists, a reset link is on its way." });
+      setCooldown(RESEND_COOLDOWN);
     } catch (error) {
       setNotice({ tone: "error", text: friendlyError(error) });
     } finally {
@@ -368,8 +381,9 @@ function SigninForm() {
               onChange={value => { setPassword(value); setErrors(e => ({ ...e, password: undefined })); }} />
           </Field>
         )}
-        <button className="button au-submit" disabled={busy}>
+        <button className="button au-submit" disabled={busy || (reset && cooldown > 0)}>
           {busy ? <><Loader2 className="au-spin" size={17} /> {reset ? "Sending link…" : "Signing in…"}</>
+            : reset && cooldown > 0 ? <>Send again in {cooldown}s</>
             : <>{reset ? "Send reset link" : "Sign in"} <ArrowRight size={17} /></>}
         </button>
         {reset && (

@@ -18,6 +18,7 @@ import { api } from "@/lib/api";
 import { previewHtml } from "@/lib/email";
 import { templateHeadline, type CatalogEntry } from "@/lib/catalog";
 import { EmailThumbnail } from "./email-thumbnail";
+import { Sk } from "./skeleton";
 import "./template-gallery.css";
 
 type Entry = CatalogEntry;
@@ -169,7 +170,7 @@ export function CloudGallery({ preview = false, initialCategory = ALL, initialTe
               {search && <button type="button" aria-label="Clear search" onClick={() => setSearch("")}><X size={15} /></button>}
             </label>
             <div className="tg-toolbar-end">
-              <span className="tg-result" aria-live="polite">{loading ? "Loading…" : `${filtered.length} ${filtered.length === 1 ? "template" : "templates"}`}</span>
+              <span className="tg-result" aria-live="polite">{loading ? <Sk w={84} h={12} /> : `${filtered.length} ${filtered.length === 1 ? "template" : "templates"}`}</span>
               <select aria-label="Sort templates" value={sort} onChange={event => setSort(event.target.value)}>
                 <option value="curated">Curated</option>
                 <option value="az">Name A–Z</option>
